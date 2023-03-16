@@ -24,5 +24,5 @@ def plot_time_series(ts=pd.DataFrame({'timestamp': [], 'values': []})):
 if __name__ == '__main__':
     L = Loader()
     pool, substations = L.get_data()
-    plot_time_series(ts=pool[['timestamp', 'P_pool_historical']][:1000])
+    plot_time_series(ts=pool[['timestamp', 'P_pool_historical']])
     pass
