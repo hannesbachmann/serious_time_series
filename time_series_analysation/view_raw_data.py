@@ -77,12 +77,29 @@ def plot_weekly_mean(ts):
     pass
 
 
+def plot_yearly_means(ts):
+    # split timeseries into smaller yearly dataframe timeseries
+    years = [g for n, g in ts.set_index('timestamp').groupby(pd.Grouper(freq='Y'))]  # or 'Q' for quarter
+    # create dataframe to store the means for every year
+    years_mean = pd.DataFrame({'timestamp': [g.index[0] for g in years], 'P_pool_historical_year_mean':
+                                            [g.mean()[0] for g in years]}).set_index('timestamp')
+
+    years_mean.plot()
+    plt.show()
+    # high values for 2018
+    # low values for 2020
+    # 2022 is not complete, so this year will eventually be cut
+    # quarters look relatively normal
+    pass
+
+
 if __name__ == '__main__':
     L = Loader()
     pool, substations = L.get_data()
     # pool = handle_to_high_values(ts=pool[['timestamp', 'P_pool_historical']])
     # pool = handle_shut_down_values(ts=pool[['timestamp', 'P_pool_historical']], replacing_method='values')
     # pool = handle_low_day_values(ts=pool[['timestamp', 'P_pool_historical']], replacing_method='values')
+    plot_yearly_means(ts=pool[['timestamp', 'P_pool_historical']])
     plot_weekly_mean(ts=pool[['timestamp', 'P_pool_historical']])
     plot_daily_means(ts=pool[['timestamp', 'P_pool_historical']])
     plot_time_series_yearly(ts=pool[['timestamp', 'P_pool_historical']])
