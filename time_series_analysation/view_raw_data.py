@@ -34,6 +34,8 @@ def plot_time_series_yearly(ts):
         ax2.plot(years[i_y].index, years[i_y]['P_pool_historical'])
         plt.show()
         pass
+    # low outliers
+    # - 2020-03-15T00:00:00 - 2020-05-10T00:00:00 a bunch of too low weeks (first corona lockdown and some around)
     pass
 
 
@@ -60,17 +62,36 @@ def plot_daily_means(ts):
     pass
 
 
+def plot_weekly_mean(ts):
+    # split timeseries into smaller weekly dataframe timeseries
+    weeks = [g for n, g in ts.set_index('timestamp').groupby(pd.Grouper(freq='W'))]
+    # create dataframe to store the means for every week
+    weeks_mean = pd.DataFrame({'timestamp': [g.index[0] for g in weeks], 'P_pool_historical_week_mean':
+        [g.mean()[0] for g in weeks]}).set_index('timestamp')
+
+    weeks_mean.plot()
+    plt.show()
+    # low outliers
+    # - 2020-03-15T00:00:00 - 2020-05-10T00:00:00 a bunch of too low weeks
+    #       (first corona lockdown 2020-05-22T00:00:00 - 2020-04-04T00:00:00 and some weeks before/after)
+    pass
+
+
 if __name__ == '__main__':
     L = Loader()
     pool, substations = L.get_data()
-    pool = handle_to_high_values(ts=pool[['timestamp', 'P_pool_historical']])
-    pool = handle_shut_down_values(ts=pool, replacing_method='values')
-    pool = handle_low_day_values(ts=pool, replacing_method='values')
-    # plot_daily_means(ts=pool)
-    # plot_time_series_yearly(ts=pool)
+    # pool = handle_to_high_values(ts=pool[['timestamp', 'P_pool_historical']])
+    # pool = handle_shut_down_values(ts=pool[['timestamp', 'P_pool_historical']], replacing_method='values')
+    # pool = handle_low_day_values(ts=pool[['timestamp', 'P_pool_historical']], replacing_method='values')
+    plot_weekly_mean(ts=pool[['timestamp', 'P_pool_historical']])
+    plot_daily_means(ts=pool[['timestamp', 'P_pool_historical']])
+    plot_time_series_yearly(ts=pool[['timestamp', 'P_pool_historical']])
     # plot_time_series(ts=pool)
-    try:
-        pool.to_csv(sep='|')
-    except:
-        print('store dataframe failed')
+
+    # STORE STORE STORE
+    # try:
+    #     pool.to_csv('hier könnte ihr path stehen', sep='|')
+    #     print('store dataframe was successful')
+    # except:
+    #     print('store dataframe failed')
     pass

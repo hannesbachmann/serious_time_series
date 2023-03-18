@@ -1,0 +1,8 @@
+Data that seems to be important:
+
+- datetime separated into (day of week, month, year, time)
+- holiday of not (mark sunday as holiday, [maybe also mark saturday as holiday?])
+- anomalies (corona lockdowns, reduced public transport offer)
+- temperature for each datapoint
+- power values
+- how many tram, buses where operating (at this day)

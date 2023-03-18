@@ -74,9 +74,10 @@ def handle_low_day_values(ts, replacing_method='zeros'):
                 '2020-09-29T00:00:00',
                 '2020-10-07T00:00:00']
     for day in bad_days:
+        print(f'correcting day: {day}')
         if replacing_method == 'values':
-            dt_start = pd.to_datetime(day) - pd.Timedelta(days=2)
-            dt_end = pd.to_datetime(day) - pd.Timedelta(days=1)
+            dt_start = pd.to_datetime(day) - pd.Timedelta(days=1)
+            dt_end = pd.to_datetime(day)
 
             ts1 = ts.set_index('timestamp')
             day_before = ts1[dt_start:dt_end]
