@@ -1,0 +1,45 @@
+\documentclass[a5paper,english,parskip=half-]{scrartcl}
+\usepackage{fontspec}
+% \setmainfont{Libertinus Serif}
+\usepackage{babel}
+\title{Time Series Processing}
+\author{Hannes}
+\date{\today}
+\begin{document}
+	\maketitle
+	\foreignlanguage{english}{
+		\begin{abstract}
+			This is about the analysis of time series with respect to forecasting.
+	\end{abstract}}
+	\section{Introduction}
+	Given a sequence of power values and some other features, 
+	
+	it is the goal to estimate power values for the next days.
+	\section{Steps}
+	- analyse raw dataset to detect ouliers
+	
+	--> plot yearly, weekly, daily means
+	
+	--> compare every year with its following year
+	
+	- analyse series with respect to coorelations
+	
+	--> plot power values against:
+	
+	---> temperatures
+	
+	---> day of week
+	
+	---> month
+	
+	---> year
+	
+	---> holiday
+	
+	---> time of day
+	
+	---> anomalies (corona lockdowns, reduced public transport offer)
+	
+	---> how many trams, buses where operating (at this day)
+			represented as Wagon-kilometres / Vehicle-kilometres
+\end{document}

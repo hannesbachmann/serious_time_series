@@ -97,18 +97,12 @@ def plot_yearly_means(ts):
 if __name__ == '__main__':
     L = Loader()
     pool, substations, temperature = L.get_data()
-    time_series = pool[['timestamp', 'P_pool_historical']].copy()
-    time_series['T_historical'] = temperature['T_historical']
+    time_series = L.get_pool_and_temperature().copy()
 
-    time_before = time.time()
-    time_series = handle_to_high_values(ts=time_series)
-    time_series = handle_shut_down_values(ts=time_series, replacing_method='values')
-    time_series = handle_low_day_values(ts=time_series, replacing_method='values')
-    print(f'data processing took: {time.time() - time_before} seconds')
-    # plot_yearly_means(ts=pool[['timestamp', 'P_pool_historical']])
-    # plot_weekly_mean(ts=pool[['timestamp', 'P_pool_historical']])
-    # plot_daily_means(ts=pool[['timestamp', 'P_pool_historical']])
-    # plot_time_series_yearly(ts=pool[['timestamp', 'P_pool_historical']])
+    plot_yearly_means(ts=pool[['timestamp', 'P_pool_historical']])
+    plot_weekly_mean(ts=pool[['timestamp', 'P_pool_historical']])
+    plot_daily_means(ts=pool[['timestamp', 'P_pool_historical']])
+    plot_time_series_yearly(ts=pool[['timestamp', 'P_pool_historical']])
     # plot_time_series(ts=pool)
 
     # STORE STORE STORE

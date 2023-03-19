@@ -57,8 +57,8 @@ if __name__ == '__main__':
     print(f'total time needed: {time.time() - time_before}')  # 14.25sec
 
     # STORE STORE STORE
-    try:
-        time_series.set_index('timestamp').to_csv('C:\\Users\\Hannes\\PycharmProjects\\serious_time_series\\measured_values\\pool_temperature_2015_2022_handled_outliers.csv', sep='|')
-        print('store dataframe was successful')
-    except:
-        print('store dataframe failed')
+    # try:
+    #     time_series.set_index('timestamp').to_csv('C:\\Users\\Hannes\\PycharmProjects\\serious_time_series\\measured_values\\pool_temperature_2015_2022_handled_outliers.csv', sep='|')
+    #     print('store dataframe was successful')
+    # except:
+    #     print('store dataframe failed')
