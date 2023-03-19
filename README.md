@@ -1,2 +1,2 @@
 # serious_time_series
-Me looking at some time serious
+Me seriously looking at some time series
