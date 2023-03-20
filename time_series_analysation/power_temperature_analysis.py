@@ -25,7 +25,7 @@ def plot_power_and_temperature(ts):
 
 
 def plot_power_against_temperature(ts):
-    # plots means of the power values over temperatures
+    # plots means of the power values over temperatures    ts['T_historical'] = ts['T_historical'].round(1)
     ts = ts[['T_historical', 'P_pool_historical']].groupby(['T_historical']).mean()
     ts.plot()
     plt.show()
@@ -42,10 +42,25 @@ def plot_temperature_against_power(ts):
     pass
 
 
+def plot_power_and_temperature_interval(ts, freq):
+    # split timeseries into smaller dataframe timeseries based on the given frequency
+    dfs = [g for n, g in ts.set_index('timestamp').groupby(pd.Grouper(freq=freq))]  # or 'Q' for quarter
+    # create dataframe to store the means for every step based on the given frequency
+    dfs_mean = pd.DataFrame({'timestamp': [g.index[0] for g in dfs],
+                             f'P_pool_historical': [g['P_pool_historical'].mean() for g in dfs],
+                             f'T_historical': [g['T_historical'].mean() for g in dfs]})
+
+    plot_power_and_temperature(ts=dfs_mean)
+    plot_power_against_temperature(ts=dfs_mean)
+    plot_temperature_against_power(ts=dfs_mean)
+    pass
+
+
 if __name__ == '__main__':
     L = Loader()
     time_series = L.get_pool_and_temperature().copy()
     # plot_power_and_temperature(ts=time_series)
     # plot_power_against_temperature(ts=time_series)
-    plot_temperature_against_power(ts=time_series)
+    # plot_temperature_against_power(ts=time_series)
+    plot_power_and_temperature_interval(ts=time_series, freq='h')
     pass
