@@ -67,8 +67,8 @@ def plot_weekly_mean(ts):
     # split timeseries into smaller weekly dataframe timeseries
     weeks = [g for n, g in ts.set_index('timestamp').groupby(pd.Grouper(freq='W'))]
     # create dataframe to store the means for every week
-    weeks_mean = pd.DataFrame({'timestamp': [g.index[0] for g in weeks], 'P_pool_historical_week_mean':
-        [g.mean()[0] for g in weeks]}).set_index('timestamp')
+    weeks_mean = pd.DataFrame({'timestamp': [g.index[0] for g in weeks],
+                               'P_pool_historical_week_mean': [g.mean()[0] for g in weeks]}).set_index('timestamp')
 
     weeks_mean.plot()
     plt.show()
@@ -83,7 +83,7 @@ def plot_yearly_means(ts):
     years = [g for n, g in ts.set_index('timestamp').groupby(pd.Grouper(freq='Y'))]  # or 'Q' for quarter
     # create dataframe to store the means for every year
     years_mean = pd.DataFrame({'timestamp': [g.index[0] for g in years], 'P_pool_historical_year_mean':
-                                            [g.mean()[0] for g in years]}).set_index('timestamp')
+        [g.mean()[0] for g in years]}).set_index('timestamp')
 
     years_mean.plot()
     plt.show()
