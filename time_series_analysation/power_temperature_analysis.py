@@ -56,11 +56,28 @@ def plot_power_and_temperature_interval(ts, freq):
     pass
 
 
+def plot_temperature_and_power_days(ts):
+    ts['day_of_week'] = ts['timestamp'].apply(lambda d: d.hour)
+    days = ts[['T_historical', 'P_pool_historical', 'day_of_week']].groupby(['day_of_week']).mean()
+    days['timestamp'] = list(range(days.shape[0]))
+
+    plot_power_and_temperature(ts=days)
+    # possible correlations (between time and temperature):
+    # - day_of_year (and quarter, and weekofyear, and month)
+    # - hour
+    # no correlations (between time and temperature):
+    # - day of week
+    # - day (of month)
+    # - year
+    pass
+
+
 if __name__ == '__main__':
     L = Loader()
     time_series = L.get_pool_and_temperature().copy()
     # plot_power_and_temperature(ts=time_series)
     # plot_power_against_temperature(ts=time_series)
     # plot_temperature_against_power(ts=time_series)
-    plot_power_and_temperature_interval(ts=time_series, freq='h')
+    # plot_power_and_temperature_interval(ts=time_series, freq='h')
+    plot_temperature_and_power_days(ts=time_series)
     pass

@@ -99,11 +99,11 @@ if __name__ == '__main__':
     pool, substations, temperature = L.get_data()
     time_series = L.get_pool_and_temperature().copy()
 
-    plot_yearly_means(ts=pool[['timestamp', 'P_pool_historical']])
-    plot_weekly_mean(ts=pool[['timestamp', 'P_pool_historical']])
-    plot_daily_means(ts=pool[['timestamp', 'P_pool_historical']])
-    plot_time_series_yearly(ts=pool[['timestamp', 'P_pool_historical']])
-    # plot_time_series(ts=pool)
+    # plot_yearly_means(ts=pool[['timestamp', 'P_pool_historical']])
+    # plot_weekly_mean(ts=pool[['timestamp', 'P_pool_historical']])
+    # plot_daily_means(ts=pool[['timestamp', 'P_pool_historical']])
+    # plot_time_series_yearly(ts=pool[['timestamp', 'P_pool_historical']])
+    plot_time_series(ts=pool)
 
     # STORE STORE STORE
     # try:

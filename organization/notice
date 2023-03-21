@@ -7,3 +7,4 @@ Data that seems to be important:
 - power values
 - how many tram, buses where operating (at this day)
 - Wagon-kilometres / Vehicle-kilometres
+- dependencies between past values and current/next values (like yesterday/last week and today/tomorrow)
