@@ -62,7 +62,7 @@ def separate_day_into_segments(ts):
 
     day_with_section['work_day'] = day_with_section.apply(lambda row: 1 if row['timestamp'][0].day_of_week < 5 else 0,
                                                           axis=1)
-    day_with_section['correct'] = day_with_section.apply(lambda row: 1 if row['P_pool_historical'][2] < row['P_pool_historical'][1] or row['P_pool_historical'][2] < row['P_pool_historical'][0] else 0,
+    day_with_section['correct'] = day_with_section.apply(lambda row: 0 if row['P_pool_historical'][2] > row['P_pool_historical'][0] and row['work_day'] == 1 else 1,
                                                          axis=1)
 
     incorrect = day_with_section[day_with_section['correct'] == 0]
