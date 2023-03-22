@@ -12,6 +12,7 @@ def plot_power_and_temperature(ts):
     ax1.set_xlabel('Datetime')
     ax1.set_ylabel('P_pool_historical [P in W]', color='red')
     ax1.plot(ts['timestamp'], ts['P_pool_historical'], color='red')
+    ax1.plot(ts['timestamp'], ts['incorrect'], color='red')
     ax1.tick_params(axis='y', labelcolor='red')
 
     # Adding Twin Axes for temperatures

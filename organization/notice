@@ -1,6 +1,6 @@
 Data that seems to be important:
 
-- datetime separated into (day of week, month, year, time)
+- datetime separated into (day of week, month, year, time, work day)
 - holiday of not (mark sunday as holiday, [maybe also mark saturday as holiday?])
 - anomalies (corona lockdowns, reduced public transport offer)
 - temperature for each datapoint
@@ -8,3 +8,11 @@ Data that seems to be important:
 - how many tram, buses where operating (at this day)
 - Wagon-kilometres / Vehicle-kilometres
 - dependencies between past values and current/next values (like yesterday/last week and today/tomorrow)
+- split day into night [20:00-05:00],
+  rush-hour traffic (morning) [05:00-11:00],
+  afternoon [11:00-20:00]   -> maybe move the end time to ~23:00/~23:00 for the weekend
+  -> might be sliding depending on day of year
+  -> different behavior on work day and weekend/holiday
+
+-- when is the daily max outside of [05:00-11:00] (for a work day)?
+-- how many hours (per day) is the power over a specified limit?
