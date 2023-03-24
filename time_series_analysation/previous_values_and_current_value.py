@@ -19,25 +19,45 @@ def plot_day_before_and_today(ts):
     pass
 
 
-def autocorrelation(ts, freq):
-    # split timeseries into smaller dataframe timeseries based on the given frequency
-    dfs = [g for n, g in ts.set_index('timestamp').groupby(pd.Grouper(freq=freq))]  # or 'Q' for quarter
-    # create dataframe to store the means for every step based on the given frequency
-    dfs_mean = pd.DataFrame({'timestamp': [g.index[0] for g in dfs],
-                             f'P_pool_historical': [g['P_pool_historical'].mean() for g in dfs],
-                             f'T_historical': [g['T_historical'].mean() for g in dfs]})
+def autocorrelation_power(ts, freq):
+    dfs_mean = split_ts(ts, freq)
+
     dfs_mean[['P_pool_historical']].plot()
     plot_acf(dfs_mean['P_pool_historical'], lags=dfs_mean.shape[0]-1)
+    plot_pacf(dfs_mean['P_pool_historical'], lags=int(dfs_mean.shape[0] / 2)-1)
     plt.show()
     # positive: month, week, day
     # negative: year, (quarter), hour, minute
     pass
 
 
+def autocorrelation_temperature(ts, freq):
+    dfs_mean = split_ts(ts, freq)
+
+    dfs_mean[['T_historical']].plot()
+    plot_acf(dfs_mean['T_historical'], lags=dfs_mean.shape[0]-1)
+    plot_pacf(dfs_mean['T_historical'], lags=int(dfs_mean.shape[0] / 2)-1)
+    plt.show()
+    # positive: month, week, day
+    # negative: year, (quarter), hour, minute
+    pass
+
+
+def split_ts(ts, freq):
+    # split timeseries into smaller dataframe timeseries based on the given frequency
+    dfs = [g for n, g in ts.set_index('timestamp').groupby(pd.Grouper(freq=freq))]  # or 'Q' for quarter
+    # create dataframe to store the means for every step based on the given frequency
+    dfs_mean = pd.DataFrame({'timestamp': [g.index[0] for g in dfs],
+                             f'P_pool_historical': [g['P_pool_historical'].mean() for g in dfs],
+                             f'T_historical': [g['T_historical'].mean() for g in dfs]})
+    return dfs_mean
+
+
 if __name__ == '__main__':
     L = Loader()
     time_series = L.get_pool_and_temperature()
-    autocorrelation(ts=time_series, freq='D')
+    autocorrelation_power(ts=time_series, freq='D')
+    autocorrelation_temperature(ts=time_series, freq='D')
     # plot_day_before_and_today(ts=time_series)
 
     pass
