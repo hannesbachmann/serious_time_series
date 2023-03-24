@@ -82,6 +82,11 @@ def separate_day_into_segments(ts):
 
 
 if __name__ == '__main__':
+    pool_data = pd.read_csv('../measured_values/pool_2015_2022.csv', delimiter='|')
+    pool_data['timestamp'] = pd.to_datetime(pool_data['timestamp'])
+    # split timeseries into smaller dataframe timeseries based on the given frequency
+    dfs = [g for n, g in pool_data.set_index('timestamp').groupby(pd.Grouper(freq='Y'))]  # or 'Q' for quarter
+
     # sep work day and weekend
     L = Loader()
     time_series = L.get_pool_and_temperature()
