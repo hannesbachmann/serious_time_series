@@ -15,4 +15,4 @@ Data that seems to be important:
   -> different behavior on work day and weekend/holiday
 
 -- when is the daily max outside of [05:00-11:00] ?  -> only on holidays and weekends
--- how many hours (per day) is the power over a specified limit?
+-- how many hours (per day) is the power over a specified limit? -> correlation with sunlight per day?

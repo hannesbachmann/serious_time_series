@@ -81,15 +81,45 @@ def separate_day_into_segments(ts):
     pass
 
 
-if __name__ == '__main__':
-    pool_data = pd.read_csv('../measured_values/pool_2015_2022.csv', delimiter='|')
-    pool_data['timestamp'] = pd.to_datetime(pool_data['timestamp'])
+def plot_power_day_length(ts, limit):
+    """how many hour values per day lay over a specified limit.
+    also how many sun-light hours at this day"""
+    # ts = split_ts(ts, freq='D')
+    filtered = ts.copy()
+    filtered[f'over_{limit}'] = filtered['P_pool_historical'].apply(lambda x: 1 if x >= limit else 0)
+    dfs = split_ts(filtered, freq='D', limit=limit)
+
+    dfs.set_index('timestamp')[[f'over_{limit}']].plot()
+    # plt.show()
+    # 2018-02-27
+    # 2019-01-23
+    pass
+
+
+def split_ts(ts, freq, limit):
     # split timeseries into smaller dataframe timeseries based on the given frequency
-    dfs = [g for n, g in pool_data.set_index('timestamp').groupby(pd.Grouper(freq='Y'))]  # or 'Q' for quarter
+    dfs = [g for n, g in ts.set_index('timestamp').groupby(pd.Grouper(freq=freq))]  # or 'Q' for quarter
+    # create dataframe to store the means for every step based on the given frequency
+    dfs_mean = pd.DataFrame({'timestamp': [g.index[0] for g in dfs],
+                             f'P_pool_historical': [g['P_pool_historical'].mean() for g in dfs],
+                             f'T_historical': [g['T_historical'].mean() for g in dfs],
+                             f'over_{limit}': [g[f'over_{limit}'].sum() / 4 for g in dfs]})  # div by 4 to get hours
+    return dfs_mean
+
+
+if __name__ == '__main__':
+    # pool_data = pd.read_csv('../measured_values/pool_2015_2022.csv', delimiter='|')
+    # pool_data['timestamp'] = pd.to_datetime(pool_data['timestamp'])
+    # # split timeseries into smaller dataframe timeseries based on the given frequency
+    # dfs = [g for n, g in pool_data.set_index('timestamp').groupby(pd.Grouper(freq='Y'))]  # or 'Q' for quarter
 
     # sep work day and weekend
     L = Loader()
     time_series = L.get_pool_and_temperature()
+
+    for i in range(10):
+        plot_power_day_length(ts=time_series, limit=1000 * i + 5000)
+    plt.show()
 
     separate_day_into_segments(ts=time_series)
 
