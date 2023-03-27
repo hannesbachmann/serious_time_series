@@ -16,3 +16,6 @@ Data that seems to be important:
 
 -- when is the daily max outside of [05:00-11:00] ?  -> only on holidays and weekends
 -- how many hours (per day) is the power over a specified limit? -> correlation with sunlight per day?
+-- remove trend and seasonality from power values (and from temperature values) [week and year]
+-- correlation between static power values and static temperature values?
+
