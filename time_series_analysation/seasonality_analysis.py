@@ -53,6 +53,13 @@ def calc_seasonality_power(ts):
     # df.plot()
     # plt.show()
     # result: there is a strong seasonality for the periods week and year
+    # time_series = trend + season + resid
+    # = > time_series - season = trend + resid
+    #
+    # time_series - season = season_y + trend_y + resid_y
+    # = > time_series - season - season_y = trend_y + resid_y
+    #
+    # = > time_series = trend_y + resid_y + season + season_y
     return df
 
 
@@ -78,6 +85,21 @@ def calc_seasonality_temperature(ts):
     return df
 
 
+def compare_static_means(ts):
+    """compare the decomposed static temperature and power values"""
+    p_mean = df['P_pool_historical'].mean()
+    t_mean = df['T_historical'].mean()
+    ts['p_over_mean'] = ts['P_pool_historical'].apply(lambda x: 10 if x >= p_mean else -10)
+    ts['t_under_mean'] = ts['T_historical'].apply(lambda x: 10 if x <= t_mean else -10)
+    ts['corr'] = ts.apply(lambda row: 1 if row['p_over_mean'] == row['t_under_mean'] else 0, axis=1)
+    # ts.set_index('timestamp')[['p_over_mean', 't_under_mean']].plot()
+    correct = ts['corr'].mean()
+    ts.set_index('timestamp')[['corr']].plot()
+    plt.show()
+
+    pass
+
+
 if __name__ == '__main__':
     L = Loader()
     time_series = L.get_pool_and_temperature()
@@ -89,5 +111,7 @@ if __name__ == '__main__':
     df = df_power[['composed']].copy()
     df['T_historical'] = df_temperature['without_seasonal_year']
     df['P_pool_historical'] = df_power['without_seasonal_year']
-    plot_power_and_temperature(ts=df[['T_historical', 'P_pool_historical']].reset_index())
+    # plot_power_and_temperature(ts=df[['T_historical', 'P_pool_historical']].reset_index())
+
+    compare_static_means(ts=df[['T_historical', 'P_pool_historical']].reset_index())
     pass
