@@ -46,9 +46,11 @@ def calc_seasonality_power(ts):
     ts['seasonal_year'] = decomposed_year.seasonal
     ts['without_seasonal_year'] = ts['without_seasonal'] - decomposed_year.seasonal     # = trend + resid for year
     year_mean = decomposed_year.trend.mean() + decomposed_year.resid.mean()
-    df = ts[['P_pool_historical', 'without_seasonal_year']]
+    df = ts[['P_pool_historical']]
     # composition evaluation using the seasonality for week and year and the means of trend and resid
     df['composed'] = ts['seasonal_week'] + ts['seasonal_year'] + year_mean
+    df['seasonal'] = ts['seasonal_week'] + ts['seasonal_year']
+    df['without_seasonal'] = ts['without_seasonal_year']
 
     # df.plot()
     # plt.show()
@@ -75,9 +77,11 @@ def calc_seasonality_temperature(ts):
     ts['seasonal_year'] = decomposed_year.seasonal
     ts['without_seasonal_year'] = ts['without_seasonal'] - decomposed_year.seasonal  # = trend + resid for year
     year_mean = decomposed_year.trend.mean() + decomposed_year.resid.mean()
-    df = ts[['T_historical', 'without_seasonal_year']]
+    df = ts[['T_historical']]
     # composition evaluation using the seasonality for week and year and the means of trend and resid
     df['composed'] = ts['seasonal_week'] + ts['seasonal_year'] + year_mean
+    df['seasonal'] = ts['seasonal_week'] + ts['seasonal_year']
+    df['without_seasonal'] = ts['without_seasonal_year']
 
     # df.plot()
     # plt.show()
@@ -109,9 +113,22 @@ if __name__ == '__main__':
     df_power = calc_seasonality_power(ts=time_series.set_index('timestamp')[['P_pool_historical']])
     df_temperature = calc_seasonality_temperature(ts=time_series.set_index('timestamp')[['T_historical']])
     df = df_power[['composed']].copy()
-    df['T_historical'] = df_temperature['without_seasonal_year']
-    df['P_pool_historical'] = df_power['without_seasonal_year']
+    df['T_historical_train'] = df_temperature['without_seasonal']
+    df['P_pool_historical_train'] = df_power['without_seasonal']
+    df['P_pool_historical_seasonal'] = df_power['seasonal']
+    df['T_historical_seasonal'] = df_temperature['seasonal']
+    df['T_historical'] = time_series.set_index('timestamp')['T_historical']
+    df['P_pool_historical'] = time_series.set_index('timestamp')['P_pool_historical']
+    df = df.drop('composed', axis=1)
+
     # plot_power_and_temperature(ts=df[['T_historical', 'P_pool_historical']].reset_index())
+
+    # STORE STORE STORE
+    try:
+        df.to_csv('../measured_values/pool_2015_2022_handled_outliers_static.csv', sep='|')
+        print('store dataframe was successful')
+    except:
+        print('store dataframe failed')
 
     compare_static_means(ts=df[['T_historical', 'P_pool_historical']].reset_index())
     pass

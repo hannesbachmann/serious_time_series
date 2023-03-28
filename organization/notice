@@ -19,3 +19,5 @@ Data that seems to be important:
 -- remove trend and seasonality from power values (and from temperature values) [week and year]
 -- correlation between static power values and static temperature values?
 
+x_train = []
+
