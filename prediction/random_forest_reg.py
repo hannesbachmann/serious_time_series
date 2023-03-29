@@ -39,16 +39,51 @@ def model_evaluation(prediction_and_actual):
     pass
 
 
+def compare_prediction_results():
+    dfs = {}
+    dfs['[\'minute_15\', \'day_of_week\']_non_static'] = pd.read_csv(
+        '../prediction_results/prediction_[\'minute_15\', \'day_of_week\']_non_static.csv', delimiter='|')
+    dfs['[\'T_historical\', \'day_of_week\', \'minute_15\']'] = pd.read_csv(
+        '../prediction_results/prediction_[\'T_historical\', \'day_of_week\', \'minute_15\'].csv', delimiter='|')
+    dfs['[\'T_historical\', \'day_of_week\', \'minute_15\']_non_static'] = pd.read_csv(
+        '../prediction_results/prediction_[\'T_historical\', \'day_of_week\', \'minute_15\']_non_static.csv',
+        delimiter='|')
+    dfs['[\'T_historical\', \'day_of_week\']_non_static'] = pd.read_csv(
+        '../prediction_results/prediction_[\'T_historical\', \'day_of_week\']_non_static.csv', delimiter='|')
+    dfs['[\'T_historical\', \'minute_15\']_non_static'] = pd.read_csv(
+        '../prediction_results/prediction_[\'T_historical\', \'minute_15\']_non_static.csv', delimiter='|')
+    dfs['[\'T_historical_train\', \'day_of_week\', \'minute_15\']'] = pd.read_csv(
+        '../prediction_results/prediction_[\'T_historical_train\', \'day_of_week\', \'minute_15\'].csv', delimiter='|')
+    dfs['[\'T_historical_train\', \'minute_15\', \'day_of_week\']_non_static'] = pd.read_csv(
+        '../prediction_results/prediction_[\'T_historical_train\', \'minute_15\', \'day_of_week\']_non_static.csv',
+        delimiter='|')
+    eval_df = {}
+    for k in dfs.keys():
+        eval_df[k] = list(dfs[k]['predicted'])
+    eval_df['timestamp'] = dfs['[\'minute_15\', \'day_of_week\']_non_static']['timestamp']
+    eval_df['P_pool_historical'] = dfs['[\'minute_15\', \'day_of_week\']_non_static']['P_pool_historical']
+    ts = pd.DataFrame(eval_df).set_index('timestamp')
+
+    ts.plot()
+    plt.show()
+    pass
+
+
 if __name__ == '__main__':
+    compare_prediction_results()
+
     L = Loader()
-    time_series = L.get_pool_and_temperature_static().copy().set_index('timestamp')
+    time_series = L.get_pool_and_temperature_training().copy().set_index('timestamp')
+
+    features = ['T_historical_train', 'minute_15', 'day_of_week']
+
     time_series_valid = time_series[pd.to_datetime('2022-03-20T00:15:00'):]
     time_series_train = time_series[:pd.to_datetime('2022-03-20T00:00:00')]
     # create and train a random forest regressor model
-    ran_for_reg = create_and_fit_model(x_train=time_series_train[['T_historical']],
+    ran_for_reg = create_and_fit_model(x_train=time_series_train[features],
                                        y_train=time_series_train['P_pool_historical'])
     result = predict(regressor=ran_for_reg,
-                     x_pred=time_series_valid[['T_historical']])
+                     x_pred=time_series_valid[features])
 
     total = time_series[['P_pool_historical']]
     res = list(time_series_train['P_pool_historical'])
@@ -58,7 +93,17 @@ if __name__ == '__main__':
     total['predicted'] = res
 
     df = time_series[['P_pool_historical']]
-    df['predicted'] = total['predicted'] #  + time_series['P_pool_historical_seasonal']
+    df['predicted'] = total['predicted']# + time_series['P_pool_historical_seasonal']
+    df[pd.to_datetime('2022-03-20T00:15:00'):].plot()
+    plt.show()
 
     model_evaluation(df[pd.to_datetime('2022-03-20T00:15:00'):])
+
+    # # STORE STORE STORE
+    # try:
+    #     df.to_csv(f'../prediction_results/prediction_{features}_non_static.csv',
+    #               sep='|')
+    #     print('store dataframe was successful')
+    # except:
+    #     print('store dataframe failed')
     pass

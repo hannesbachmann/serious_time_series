@@ -124,11 +124,11 @@ if __name__ == '__main__':
     # plot_power_and_temperature(ts=df[['T_historical', 'P_pool_historical']].reset_index())
 
     # STORE STORE STORE
-    try:
-        df.to_csv('../measured_values/pool_2015_2022_handled_outliers_static.csv', sep='|')
-        print('store dataframe was successful')
-    except:
-        print('store dataframe failed')
+    # try:
+    #     df.to_csv('../measured_values/pool_2015_2022_handled_outliers_static.csv', sep='|')
+    #     print('store dataframe was successful')
+    # except:
+    #     print('store dataframe failed')
 
     compare_static_means(ts=df[['T_historical', 'P_pool_historical']].reset_index())
     pass
