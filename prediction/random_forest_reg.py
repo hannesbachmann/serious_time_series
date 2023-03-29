@@ -68,7 +68,7 @@ def compare_prediction_results():
 
 
 if __name__ == '__main__':
-    compare_prediction_results()
+    # compare_prediction_results()
 
     L = Loader()
     time_series = L.get_pool_and_temperature_training().copy().set_index('timestamp')
