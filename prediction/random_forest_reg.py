@@ -40,23 +40,21 @@ def model_evaluation(prediction_and_actual):
 
 
 def compare_prediction_results():
-    dfs = {}
-    dfs['[\'minute_15\', \'day_of_week\']_non_static'] = pd.read_csv(
-        '../prediction_results/prediction_[\'minute_15\', \'day_of_week\']_non_static.csv', delimiter='|')
-    dfs['[\'T_historical\', \'day_of_week\', \'minute_15\']'] = pd.read_csv(
-        '../prediction_results/prediction_[\'T_historical\', \'day_of_week\', \'minute_15\'].csv', delimiter='|')
-    dfs['[\'T_historical\', \'day_of_week\', \'minute_15\']_non_static'] = pd.read_csv(
-        '../prediction_results/prediction_[\'T_historical\', \'day_of_week\', \'minute_15\']_non_static.csv',
-        delimiter='|')
-    dfs['[\'T_historical\', \'day_of_week\']_non_static'] = pd.read_csv(
-        '../prediction_results/prediction_[\'T_historical\', \'day_of_week\']_non_static.csv', delimiter='|')
-    dfs['[\'T_historical\', \'minute_15\']_non_static'] = pd.read_csv(
-        '../prediction_results/prediction_[\'T_historical\', \'minute_15\']_non_static.csv', delimiter='|')
-    dfs['[\'T_historical_train\', \'day_of_week\', \'minute_15\']'] = pd.read_csv(
-        '../prediction_results/prediction_[\'T_historical_train\', \'day_of_week\', \'minute_15\'].csv', delimiter='|')
-    dfs['[\'T_historical_train\', \'minute_15\', \'day_of_week\']_non_static'] = pd.read_csv(
-        '../prediction_results/prediction_[\'T_historical_train\', \'minute_15\', \'day_of_week\']_non_static.csv',
-        delimiter='|')
+    dfs = {'[\'minute_15\', \'day_of_week\']_non_static': pd.read_csv(
+        '../prediction_results/prediction_[\'minute_15\', \'day_of_week\']_non_static.csv', delimiter='|'),
+        '[\'T_historical\', \'day_of_week\', \'minute_15\']': pd.read_csv(
+            '../prediction_results/prediction_[\'T_historical\', \'day_of_week\', \'minute_15\'].csv', delimiter='|'),
+        '[\'T_historical\', \'day_of_week\', \'minute_15\']_non_static': pd.read_csv(
+            '../prediction_results/prediction_[\'T_historical\', \'day_of_week\', \'minute_15\']_non_static.csv',
+            delimiter='|'), '[\'T_historical\', \'day_of_week\']_non_static': pd.read_csv(
+            '../prediction_results/prediction_[\'T_historical\', \'day_of_week\']_non_static.csv', delimiter='|'),
+        '[\'T_historical\', \'minute_15\']_non_static': pd.read_csv(
+            '../prediction_results/prediction_[\'T_historical\', \'minute_15\']_non_static.csv', delimiter='|'),
+        '[\'T_historical_train\', \'day_of_week\', \'minute_15\']': pd.read_csv(
+            '../prediction_results/prediction_[\'T_historical_train\', \'day_of_week\', \'minute_15\'].csv',
+            delimiter='|'), '[\'T_historical_train\', \'minute_15\', \'day_of_week\']_non_static': pd.read_csv(
+            '../prediction_results/prediction_[\'T_historical_train\', \'minute_15\', \'day_of_week\']_non_static.csv',
+            delimiter='|')}
     eval_df = {}
     for k in dfs.keys():
         eval_df[k] = list(dfs[k]['predicted'])
