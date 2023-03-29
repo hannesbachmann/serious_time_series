@@ -71,9 +71,13 @@ if __name__ == '__main__':
     # compare_prediction_results()
 
     L = Loader()
-    time_series = L.get_pool_and_temperature_training().copy().set_index('timestamp')
+    data = L.get_pool_and_temperature_training().copy().set_index('timestamp')
+    time_series = data.copy()
 
-    features = ['T_historical_train', 'minute_15', 'day_of_week']
+    features = ['T_historical', 'minute_15', 'day_of_week']
+    # time_series['P_pool_historical'] = time_series['P_pool_historical'].rolling(4).mean().round(-1)
+    time_series['T_historical'] = time_series['T_historical'].rolling(2).mean().round(-1)
+    time_series = time_series[pd.to_datetime('2015-01-02T00:00:00'):]
 
     time_series_valid = time_series[pd.to_datetime('2022-03-20T00:15:00'):]
     time_series_train = time_series[:pd.to_datetime('2022-03-20T00:00:00')]
@@ -83,17 +87,20 @@ if __name__ == '__main__':
     result = predict(regressor=ran_for_reg,
                      x_pred=time_series_valid[features])
 
-    total = time_series[['P_pool_historical']]
-    res = list(time_series_train['P_pool_historical'])
+    total = data[['P_pool_historical']][pd.to_datetime('2015-01-02T00:00:00'):]
+    res = list(data[pd.to_datetime('2015-01-02T00:00:00'):pd.to_datetime('2022-03-20T00:00:00')]['P_pool_historical'])
     r = list(result)
     for e in r:
         res.append(e)
     total['predicted'] = res
 
+    total[['P_pool_historical', 'predicted']].plot()
+    plt.show()
+
     df = time_series[['P_pool_historical']]
     df['predicted'] = total['predicted']# + time_series['P_pool_historical_seasonal']
-    df[pd.to_datetime('2022-03-20T00:15:00'):].plot()
-    plt.show()
+    # df[pd.to_datetime('2022-03-20T00:15:00'):].plot()
+    # plt.show()
 
     model_evaluation(df[pd.to_datetime('2022-03-20T00:15:00'):])
 
