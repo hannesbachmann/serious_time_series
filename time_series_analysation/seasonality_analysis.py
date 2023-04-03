@@ -37,12 +37,12 @@ def calc_linear_trend(ts):
 def calc_seasonality_power(ts):
     """filter seasonality"""
     # separate weekly trend
-    decomposed_week = seasonal_decompose(ts['P_pool_historical'], model='additive', period=4*24*7)
+    decomposed_week = seasonal_decompose(ts['P_pool_historical'], model='additive', period=4*6*5) # period=4*24*7)
     ts['seasonal_week'] = decomposed_week.seasonal
     week_mean = decomposed_week.trend.mean() + decomposed_week.resid.mean()
     ts['without_seasonal'] = ts['P_pool_historical'] - decomposed_week.seasonal     # = trend + resid for week
     # separate yearly trend
-    decomposed_year = seasonal_decompose(ts['without_seasonal'], model='additive', period=4 * 24 * 365)
+    decomposed_year = seasonal_decompose(ts['without_seasonal'], model='additive', period=4*6*5*53)# period=4 * 24 * 365)
     ts['seasonal_year'] = decomposed_year.seasonal
     ts['without_seasonal_year'] = ts['without_seasonal'] - decomposed_year.seasonal     # = trend + resid for year
     year_mean = decomposed_year.trend.mean() + decomposed_year.resid.mean()

@@ -67,14 +67,8 @@ def compare_prediction_results():
     pass
 
 
-if __name__ == '__main__':
-    # compare_prediction_results()
-
-    L = Loader()
-    data = L.get_pool_and_temperature_training().copy().set_index('timestamp')
-    time_series = data.copy()
-
-    features = ['T_historical', 'minute_15', 'day_of_week']
+def prepare_prediction(time_series, features):
+    data = time_series.copy()
     # time_series['P_pool_historical'] = time_series['P_pool_historical'].rolling(4).mean().round(-1)
     time_series['T_historical'] = time_series['T_historical'].rolling(2).mean().round(-1)
     time_series = time_series[pd.to_datetime('2015-01-02T00:00:00'):]
@@ -98,7 +92,7 @@ if __name__ == '__main__':
     plt.show()
 
     df = time_series[['P_pool_historical']]
-    df['predicted'] = total['predicted']# + time_series['P_pool_historical_seasonal']
+    df['predicted'] = total['predicted']  # + time_series['P_pool_historical_seasonal']
     # df[pd.to_datetime('2022-03-20T00:15:00'):].plot()
     # plt.show()
 
@@ -112,3 +106,15 @@ if __name__ == '__main__':
     # except:
     #     print('store dataframe failed')
     pass
+
+
+# if __name__ == '__main__':
+#     # compare_prediction_results()
+#
+#     L = Loader()
+#     data = L.get_pool_and_temperature_training().copy().set_index('timestamp')
+#     time_series = data.copy()
+#     features = ['T_historical', 'minute_15', 'day_of_week']
+#     prepare_prediction(time_series=time_series, features=features)
+#
+#     pass

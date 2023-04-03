@@ -1,7 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 from time_series_analysation.data_loader import Loader
-from power_temperature_analysis import plot_power_and_temperature
+from time_series_analysation.power_temperature_analysis import plot_power_and_temperature
 
 
 def plot_work_days(ts):
@@ -77,8 +77,7 @@ def separate_day_into_segments(ts):
     # night from 2015-06-07 to 2015-06-07 --> high max
     # night from 2015-06-21 to 2015-06-22 --> high max
     # and some others: seems to be an effect that only appears sometimes at the weekend/holidays
-
-    pass
+    return ts
 
 
 def plot_power_day_length(ts, limit):
