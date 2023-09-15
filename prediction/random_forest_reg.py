@@ -6,7 +6,18 @@ import matplotlib.pyplot as plt
 from time_series_analysation.data_loader import Loader
 
 
-def create_and_fit_model(x_train, y_train):
+def create_and_fit_random_forest_model(x_train, y_train):
+    """x_train: temperature, minute, day_of_week, holiday
+    y_train: power
+    temperature and power are static"""
+    regressor = RandomForestRegressor(n_estimators=20,
+                                      max_depth=25,
+                                      random_state=42)
+    regressor.fit(x_train, y_train)
+    return regressor
+
+
+def create_and_fit_lstm_model(x_train, y_train):
     """x_train: temperature, minute, day_of_week, holiday
     y_train: power
     temperature and power are static"""
@@ -25,13 +36,16 @@ def predict(regressor, x_pred):
 def model_evaluation(prediction_and_actual):
     # calculate mean error for each day
     prediction_and_actual['err'] = abs(prediction_and_actual['predicted'] - prediction_and_actual['P_pool_historical'])
-    dfs = [g for n, g in prediction_and_actual[['err']].groupby(pd.Grouper(freq='D'))]
+    dfs = [g for n, g in prediction_and_actual[['err']].groupby(pd.Grouper(freq='H'))]
     # create dataframe to store the means for every step based on the given frequency
     dfs_mean = pd.DataFrame({'timestamp': [g.index[0] for g in dfs],
                              f'err': [g['err'].mean() for g in dfs]})
+    dfs_mean['err_cum_sum'] = dfs_mean['err'].cumsum()
+    dfs_mean['counter'] = [c for c in range(1, dfs_mean.shape[0] + 1)]
+    dfs_mean['err_cum_mean'] = dfs_mean['err_cum_sum'] / dfs_mean['counter']
     dfs_mean = dfs_mean.set_index('timestamp')
 
-    dfs_mean.plot()
+    dfs_mean[['err_cum_mean', 'err']].plot()
     plt.show()
 
     # from sklearn.metrics import r2_score
@@ -70,14 +84,17 @@ def compare_prediction_results():
 def prepare_prediction(time_series, features):
     data = time_series.copy()
     # time_series['P_pool_historical'] = time_series['P_pool_historical'].rolling(4).mean().round(-1)
-    time_series['T_historical'] = time_series['T_historical'].rolling(2).mean().round(-1)
+    time_series['T_historical'] = time_series['T_historical'].rolling(2).mean()     # .round(-1)
     time_series = time_series[pd.to_datetime('2015-01-02T00:00:00'):]
 
     time_series_valid = time_series[pd.to_datetime('2022-03-20T00:15:00'):]
     time_series_train = time_series[:pd.to_datetime('2022-03-20T00:00:00')]
     # create and train a random forest regressor model
-    ran_for_reg = create_and_fit_model(x_train=time_series_train[features],
-                                       y_train=time_series_train['P_pool_historical'])
+    ran_for_reg = create_and_fit_random_forest_model(x_train=time_series_train[features],
+                                                     y_train=time_series_train['P_pool_historical'])
+    # create and train a lstm regressor model
+    # ran_for_reg = create_and_fit_lstm_model(x_train=time_series_train[features],
+    #                                                  y_train=time_series_train['P_pool_historical'])
     result = predict(regressor=ran_for_reg,
                      x_pred=time_series_valid[features])
 
@@ -108,13 +125,13 @@ def prepare_prediction(time_series, features):
     pass
 
 
-# if __name__ == '__main__':
-#     # compare_prediction_results()
-#
-#     L = Loader()
-#     data = L.get_pool_and_temperature_training().copy().set_index('timestamp')
-#     time_series = data.copy()
-#     features = ['T_historical', 'minute_15', 'day_of_week']
-#     prepare_prediction(time_series=time_series, features=features)
-#
-#     pass
+if __name__ == '__main__':
+    # compare_prediction_results()
+
+    L = Loader()
+    data = L.get_pool_and_temperature_training().copy().set_index('timestamp')
+    time_series = data.copy()
+    features = ['T_historical', 'minute_15', 'day_of_week']
+    prepare_prediction(time_series=time_series, features=features)
+
+    pass

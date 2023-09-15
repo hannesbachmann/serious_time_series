@@ -19,5 +19,15 @@ Data that seems to be important:
 -- remove trend and seasonality from power values (and from temperature values) [week and year]
 -- correlation between static power values and static temperature values?
 
-x_train = []
+-- Models:  ° random forest regressor
+            ° lstm
+            ° transformer
+-- measure performance (speed in training and prediction) and accuracy (forecast error, mse, percentage, etc.)
 
+-- which features to chose?
+-- which feature preprocessing to chose?
+-- x_train = []
+
+-- where are the peaks? => df with only peaks and there value + datetime =>
+-- predicting peaks => so maybe label weakly[daily, monthly] peaks to classify them?
+-- regression from peaks over year to predict the height for the next peak (or if, given datetime, the value is peak)
