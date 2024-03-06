@@ -45,13 +45,13 @@ if __name__ == '__main__':
 
     df = only_rush_hour(ts=time_series)
     df_seasonal = calc_seasonality_power(ts=df)
-    df_seasonal['timestamp'] = df['timestamp']
+    df_seasonal['timestamp'] = list(df['timestamp'])
     df_train = prepare_timestamp_features(ts=df_seasonal)   #.set_index('timestamp')
     df_train['T_historical'] = df['T_historical']
     df_train['T_historical_seasonal'] = df['T_historical_seasonal']
     df_train['day_of_year'] = df['day_of_year']
     features = ['T_historical', 'minute_15', 'day_of_week', 'day_of_year']
-    prepare_prediction(time_series=df_train.set_index('timestamp'), features=features)
+    # prepare_prediction(time_series=df_train.set_index('timestamp'), features=features)
 
     pass
 
